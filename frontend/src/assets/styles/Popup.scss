@@ -1,0 +1,88 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+  
+    .blind {
+        position: absolute;
+        top: -25%;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        img {
+            width: 100%;
+        }
+    }
+    .popup-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+      .popup-title {
+        margin-top: 100px;
+        h2 {
+          margin-bottom: 10px;
+          color: #8051F1;
+        }
+    
+        p {
+          margin-bottom: 20px;
+          color: #fff;
+        }
+      }
+
+      .frame-container {
+        position: relative;
+        display: inline-block; /* Ensures that the container takes up only as much space as needed */
+      }
+    
+      .frame-image {
+        display: block;
+        width: 100%; /* Make sure the frame scales appropriately */
+      }
+    
+      .growing-image {
+        position: absolute;
+        top: 20%; /* Adjust according to where you want growing1 to appear */
+        left: 50%;
+        transform: translate(-50%, -50%); /* Center growing1 inside the frame */
+        width: 50%; /* Adjust this to fit inside the frame */
+      }
+  
+      .close-button {
+        margin-bottom: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 20px;
+        width: 95%;
+        border: solid #8051F1 1px; /* Изменён цвет границы на #8051F1 */
+        border-radius: 15px;
+        background: 
+            url('../images/noise.png'), /* Фоновое изображение */
+            radial-gradient(circle, rgba(128,81,241,0.2) 0%, rgba(128,81,241,0.0946) 77%, rgba(128,81,241,0.06) 100%); /* Градиент с прозрачностью 20% */
+        background-size: cover;
+        background-position: center;
+        
+        color: #8051F1;
+      }
+    }
+  }
+  

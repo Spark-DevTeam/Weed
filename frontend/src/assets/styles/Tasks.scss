@@ -1,0 +1,30 @@
+.tasks {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 35px;
+    .title {
+        color: #fff;
+        font-size: 25px;
+    }
+    .subtitle {
+        text-align: center;
+        margin-top: 25px;
+        line-height: 25px;
+        color: #fff;
+        height: 50px;
+        span {
+            color: #8051F1;
+        }
+    }
+
+    .friends-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        height: auto;
+    } 
+}

@@ -1,0 +1,140 @@
+.blind {
+    position: absolute;
+    top: -25%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    img {
+        width: 100%;
+    }
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 25px;
+    .name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 180px;
+        border-radius: 9999px;
+        border: solid #8051F1 1px;
+        background: linear-gradient(270deg, rgba(128,81,241,0) 0%, rgba(128,81,241,0.0446) 20%, rgba(128,81,241,0.2) 100%);
+        span {
+            color: #fff;
+            font-size: 15px;
+        }
+    }
+    .points {
+        margin-top: 40px;
+        span {
+            color: #8051F1;
+            font-size: 35px;
+            position: relative;
+            text-shadow: 0 0 5px rgba(128, 81, 241, 0.5), 
+                         5px 5px 0px rgba(128, 81, 241, 0.3);
+        }
+    }
+
+    .game-button {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        width: 90%;
+        border-radius: 25px;
+        border: solid #8051F1 1px;
+        background: 
+            url('../images/noise.png'), /* Добавлен фон с шумом */
+            url('../images/background-grow.png'),
+            linear-gradient(270deg, rgba(128,81,241,0) 0%, rgba(128,81,241,0.0446) 20%, rgba(128,81,241,0.2) 100%);
+        background-size: cover, cover, cover; /* Размеры для всех фонов */
+        background-position: center, center, center; /* Позиционирование для всех фонов */
+        font-family: 'Better VCR', sans-serif;
+    
+        color: #fff;
+        font-size: 30px;
+        transition: transform 0.2s ease; /* Плавный переход для трансформации */
+    }
+    
+    
+    .game-button:active {
+        transform: scale(0.97); /* Уменьшает кнопку при нажатии */
+    }
+
+    .growing-wrapepr {
+        position: absolute;
+        top: 45%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        .growing {
+            width: 90%;
+            .unactive {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 60px;
+                border: solid #535356 1px;
+                border-radius: 15px;
+    
+                background: 
+                url('../images/noise.png'), /* Фоновое изображение */
+                radial-gradient(circle, rgba(83,83,86,0.2) 0%, rgba(83,83,86,0.0946) 77%, rgba(83,83,86,0.06) 100%); /* Градиент с цветом #535356 и прозрачностью 20% */
+                background-size: cover;
+                background-position: center;
+    
+                color: #535356;
+                img {
+                    margin-right: 10px;
+                }
+            }
+            .start {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 60px;
+                border: solid #8051F1 1px; /* Изменён цвет границы на #8051F1 */
+                border-radius: 15px;
+                background: 
+                    url('../images/noise.png'), /* Фоновое изображение */
+                    radial-gradient(circle, rgba(128,81,241,0.2) 0%, rgba(128,81,241,0.0946) 77%, rgba(128,81,241,0.06) 100%); /* Градиент с прозрачностью 20% */
+                background-size: cover;
+                background-position: center;
+                
+                color: #8051F1;
+                img {
+                    margin-right: 10px;
+                }
+            }
+            
+            .claim {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 60px;
+                border: solid #00D98E 1px;
+                border-radius: 15px;
+                background: 
+                    url('../images/noise.png'),
+                    radial-gradient(circle, rgba(0,217,142,0.2) 0%, rgba(0,217,142,0.0946) 77%, rgba(0,217,142,0.06) 100%); /* Градиент с прозрачностью 20% */
+                background-size: cover;
+                background-position: center;
+                
+                color: #00D98E;
+            }
+        }
+    }
+
+    
+}
+
+

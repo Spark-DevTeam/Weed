@@ -1,0 +1,56 @@
+.usercard {
+    width: 100%;
+    height: 50px;
+    padding: 0 20px;
+    margin: 25px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 9999px;
+    border: solid #8051F1 1px;
+    background: linear-gradient(270deg, rgba(128,81,241,0) 0%, rgba(128,81,241,0.0446) 20%, rgba(128,81,241,0.2) 100%);
+    span {
+        color: #fff;
+        font-size: 14px;
+    }
+    .rank-image {
+        width: 18px;
+        margin-right: 10px;
+    }
+    .right {
+        display: flex;
+        align-items: center;
+        .rank {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 5px;
+            width: 24px; /* Сделаем ширину и высоту одинаковыми */
+            height: 24px; /* Высота соответствует ширине */
+            border: 1px solid #8369C5;
+            border-radius: 50%; /* Это делает элемент кругом */
+            margin-right: 10px;
+            font-size: 14px; /* Увеличим размер шрифта для более чёткого отображения */
+            text-align: center;
+        }
+        
+        .nickname {
+            font-size: 14px;
+            color: #fff;
+        }
+    }
+    .left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+            width: 24px;
+            margin-right: 8px;
+        }
+        .score {
+            font-size: 14px;
+            color: #fff;
+        }
+    }
+}

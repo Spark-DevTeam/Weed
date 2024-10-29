@@ -1,0 +1,78 @@
+.item {
+    width: 95%;
+    height: 50px;
+    // padding: 0 30px;
+    padding-bottom: 20px;
+    margin-top: 15px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1.5px;
+        background: linear-gradient(90deg, rgba(128, 81, 241, 0) 0%, rgba(128, 81, 241, 1) 47%, rgba(128, 81, 241, 0) 100%);
+    }
+
+    .left {
+        display: flex;
+        align-items: center;
+        .ava {
+            margin-right: 10px;
+        }
+        .info {
+            display: flex;
+            flex-direction: column;
+            .task {
+                color: #fff;
+                font-size: 12px;
+            }
+            .friend {
+                color: #535356;
+                margin-top: 5px;
+                font-size: 11px;
+            }
+        }
+    }
+    .right {
+        display: flex;
+        padding-top: 10px;
+    
+        // Общие стили для всех кнопок
+        .button-common {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            height: 25px;
+            width: 70px;
+            border-radius: 999px;
+            background: url('../images/noise.png');
+            background-size: cover;
+            background-position: center;
+        }
+    
+        // Стили для разных состояний кнопок
+        .open, .claim, .claimed {
+            @extend .button-common;
+        }
+    
+        .open {
+            
+
+        }
+        
+    
+        .claim {
+
+        }
+    
+        .claimed {
+
+        }
+    }
+    
+}

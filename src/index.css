@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "Better VCR";
+  src: url("./assets/fonts/BetterVCR.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  user-select: none;
+}
+
+html,
+body {
+  margin: 0;
+  background: #0a090d;
+  font-family: "Better VCR", sans-serif;
+}
