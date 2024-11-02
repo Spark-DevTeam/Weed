@@ -14,7 +14,7 @@ ikb_play = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 text="Play 📸",
-                web_app=WebAppInfo(url="https://" + os.getenv("TELEGRAM_URI")),
+                web_app=WebAppInfo(url="https://" + os.getenv("URI")),
             )
         ],
     ],
