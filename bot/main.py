@@ -13,7 +13,7 @@ bot = Bot(
     token=os.getenv("TELEGRAM_TOKEN"),
     default=DefaultBotProperties(parse_mode=ParseMode.HTML),
 )
-url = os.getenv("TELEGRAM_URI")
+url = "https://" + os.getenv("TELEGRAM_URI")
 
 
 async def main():
