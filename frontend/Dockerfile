@@ -32,4 +32,4 @@ FROM builder-base as prod
 
 COPY . /app/
 
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["npm", "run", "serve", "--", "--host"]

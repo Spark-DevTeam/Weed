@@ -1,0 +1,73 @@
+name: Deploy to prod
+
+on: workflow_dispatch
+
+jobs:
+  build_and_deploy:
+    runs-on:
+      labels: prod
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'env file'
+        run: |
+          touch .env
+          echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
+          echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> .env
+          echo TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} >> .env
+          echo URI=${{ secrets.URI }} >> .env
+          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+
+      - name: 'set env'
+        run: |
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> $GITHUB_ENV
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> $GITHUB_ENV
+          echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> $GITHUB_ENV
+          echo URI=${{ secrets.URI }} >> $GITHUB_ENV
+          echo VITE_SERVER_URL=${{ secrets.URI }} >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: false
+          load: true
+          target: prod
+          tags: weed-backend:latest
+          cache-from: type=local,src=/home/github/cache/backend
+          cache-to: type=local,dest=/home/github/cache/backend
+
+      - name: Build and push bot
+        uses: docker/build-push-action@v5
+        with:
+          context: ./bot
+          push: false
+          load: true
+          target: prod
+          tags: weed-bot:latest
+          cache-from: type=local,src=/home/github/cache/bot
+          cache-to: type=local,dest=/home/github/cache/bot
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: false
+          load: true
+          target: prod
+          tags: weed-front:latest
+          cache-from: type=local,src=/home/github/cache/frontend
+          cache-to: type=local,dest=/home/github/cache/frontend
+
+      - name: deploy
+        run: docker stack deploy --prune --with-registry-auth -c docker-stack.yaml weed

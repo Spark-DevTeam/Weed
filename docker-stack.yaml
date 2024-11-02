@@ -1,0 +1,129 @@
+services:
+  db:
+    image: postgres:13
+    container_name: db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  backend:
+    image: weed-backend:latest 
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: prod
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - static:/app/static
+      - media:/app/media
+    ports:
+      - 8000:8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`${URI}`) && (PathPrefix(`/api/v1`) || PathPrefix(`/admin`))"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  bot:
+    image: weed-bot:latest
+    container_name: bot
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+      target: prod
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  frontend:
+    image: weed-front:latest
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: prod
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    environment:
+      VITE_SERVER_URL: https://${VITE_SERVER_URL}
+    ports:
+      - 5173:5173
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${URI}`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  gateway:
+    image: nginx:1.22.1
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+      - static:/staticfiles/
+      - media:/media/
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx.rule=Host(`${URI}`) && (PathPrefix(`/static`) || PathPrefix(`/media`))"
+      - "traefik.http.services.nginx.loadbalancer.server.port=80"
+  traefik:
+    image: traefik:v2.11.10
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config.yml:/config.yml
+      - certs:/certs 
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      placement:
+          constraints:
+            - node.role == manager
+      update_config:
+        parallelism: 1
+        delay: 10s
+    command: >
+      --configFile=config.yml
+    networks:
+      - default
+      - public
+
+
+volumes:
+  postgres:
+  static:
+  media:
+  certs:
+
+networks:
+  public:
+    driver: overlay
+    name: public
+    attachable: true
