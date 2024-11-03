@@ -54,7 +54,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: prod
+      target: development
     depends_on:
       - backend
     env_file:
@@ -62,11 +62,11 @@ services:
     environment:
       VITE_BACKEND_URL: https://${URI}
     ports:
-      - 4173:4173
+      - 3000:3000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${URI}`)"
-      - "traefik.http.services.frontend.loadbalancer.server.port=4173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     deploy:
       replicas: 1
       restart_policy:
