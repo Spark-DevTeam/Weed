@@ -56,4 +56,4 @@ COPY --from=builder-base $POETRY_HOME $POETRY_HOME
 COPY --from=builder-base $VIRTUAL_ENV $VIRTUAL_ENV
 COPY . /app/
 WORKDIR /app
-CMD ["uvicorn", "--workers=4", "--port=8000", "--host=0.0.0.0", "weed.asgi:application"]
+CMD ["uvicorn", "--workers=2", "--port=8000", "--host=0.0.0.0", "weed.asgi:application"]
