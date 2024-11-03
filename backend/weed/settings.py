@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-296$j3c@0!nth%v1a94cmh!^cc@my3ngsjlqk238lf=z+=n==!"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -126,7 +126,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -135,12 +139,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS
 
-CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOW_CREDENTIALS = True
-
+ALLOWED_HOSTS = ["backend", "localhost", os.getenv("URI")]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "https://" + os.getenv("URI"),
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://" + os.getenv("URI"),
+]
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "DELETE", "OPTIONS")
-
-ALLOWED_HOSTS = ["*"]
-
-CSRF_TRUSTED_ORIGINS = ["http://localhost"]
+CORS_ALLOW_CREDENTIALS = True
