@@ -25,6 +25,8 @@ services:
     volumes:
       - static:/app/static
       - media:/app/media
+    ports:
+      - 8000:8000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${URI}`) && (PathPrefix(`/api/v1`) || PathPrefix(`/admin`))"
@@ -58,11 +60,13 @@ services:
     env_file:
       - .env
     environment:
-      VITE_SERVER_URL: https://${VITE_SERVER_URL}
+      VITE_BACKEND_URL: https://${URI}
+    ports:
+      - 4173:4173
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${URI}`)"
-      - "traefik.http.services.frontend.loadbalancer.server.port=4173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
     deploy:
       replicas: 1
       restart_policy:

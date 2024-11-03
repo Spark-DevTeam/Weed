@@ -28,7 +28,6 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> $GITHUB_ENV
           echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> $GITHUB_ENV
           echo URI=${{ secrets.URI }} >> $GITHUB_ENV
-          echo VITE_SERVER_URL=${{ secrets.URI }} >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
