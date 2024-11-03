@@ -1,7 +1,6 @@
 services:
   db:
     image: postgres:13
-    container_name: db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -15,7 +14,6 @@ services:
       - postgres:/var/lib/postgresql/data
   backend:
     image: weed-backend:latest 
-    container_name: backend
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -27,8 +25,6 @@ services:
     volumes:
       - static:/app/static
       - media:/app/media
-    ports:
-      - 8000:8000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${URI}`) && (PathPrefix(`/api/v1`) || PathPrefix(`/admin`))"
@@ -39,7 +35,6 @@ services:
         condition: on-failure
   bot:
     image: weed-bot:latest
-    container_name: bot
     build:
       context: ./bot
       dockerfile: Dockerfile
@@ -54,7 +49,6 @@ services:
         condition: on-failure
   frontend:
     image: weed-front:latest
-    container_name: frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -65,12 +59,10 @@ services:
       - .env
     environment:
       VITE_SERVER_URL: https://${VITE_SERVER_URL}
-    ports:
-      - 5173:5173
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${URI}`)"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=4173"
     deploy:
       replicas: 1
       restart_policy:
