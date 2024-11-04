@@ -63,14 +63,14 @@ services:
       VITE_BACKEND_URL: https://${URI}/api/v1/
     ports:
       - 4173:4173
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`${URI}`)"
-      - "traefik.http.services.frontend.loadbalancer.server.port=4173"
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${URI}`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=4173"
   gateway:
     image: nginx:1.22.1
     volumes:

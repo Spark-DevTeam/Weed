@@ -42,4 +42,5 @@ certificatesResolvers:
       httpChallenge:
         entryPoint: web
 
-logLevel: DEBUG
+log:
+  level: DEBUG
