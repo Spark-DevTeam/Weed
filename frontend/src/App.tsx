@@ -10,7 +10,7 @@ const App: React.FC = () => {
   const { getToken, getUser, userToken } = useUserStore((state) => state);
 
   async function claim() {
-    const response = await axios.post(`${BACKEND_URL}/users/claim`, null, {
+    const response = await axios.post(`${BACKEND_URL}/users/claim/`, null, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userToken,

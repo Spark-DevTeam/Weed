@@ -44,3 +44,16 @@ services:
       - .env
     volumes:
       - ./bot/:/app
+  frontend:
+    image: weed-front:latest
+    container_name: frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
