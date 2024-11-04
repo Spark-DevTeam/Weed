@@ -139,14 +139,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS
 
-ALLOWED_HOSTS = ["backend", "localhost", os.getenv("URI")]
+ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "https://" + os.getenv("URI"),
+    "http://localhost",
 ]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://" + os.getenv("URI"),
-]
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "DELETE", "OPTIONS")
 CORS_ALLOW_CREDENTIALS = True
