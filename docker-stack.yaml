@@ -60,7 +60,7 @@ services:
     env_file:
       - .env
     environment:
-      VITE_BACKEND_URL: https://${URI}/api/v1/
+      VITE_BACKEND_URL: https://${URI}/api/v1
     ports:
       - 4173:4173
     deploy:
