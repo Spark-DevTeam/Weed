@@ -54,7 +54,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: development
+      target: prod
     depends_on:
       - backend
     env_file:
@@ -68,7 +68,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${URI}`)"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.services.frontend.loadbalancer.server.port=4173"
   gateway:
     image: nginx:1.22.1
     volumes:

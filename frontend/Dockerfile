@@ -32,4 +32,6 @@ FROM builder-base as prod
 
 COPY . /app/
 
+RUN npm run build
+
 CMD ["npm", "run", "preview", "--", "--host"]

@@ -63,7 +63,7 @@ jobs:
           context: ./frontend
           push: false
           load: true
-          target: development
+          target: prod
           tags: weed-front:latest
           cache-from: type=local,src=/home/github/cache/frontend
           cache-to: type=local,dest=/home/github/cache/frontend
