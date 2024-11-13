@@ -21,7 +21,8 @@ const App: React.FC = () => {
   }
 
   async function waitToken(telegramData: TgUserData) {
-    await getToken(telegramData);
+    let data = {"query_id":"AAG5g6VPAAAAALmDpU-kDIS3","user":{"id":1336247225,"first_name":"Huden","last_name":"","username":"Hudeeen","language_code":"ru","allows_write_to_pm":true},"auth_date":"1731426541","hash":"b5a472f0265a202138ec8a4ef7a8a4d4e79479ba2f5ee0b7a700ab4412df4b1a"}
+    await getToken(data);
     claim();
     getUser();
   }
