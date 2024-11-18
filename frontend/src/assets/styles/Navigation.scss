@@ -9,6 +9,7 @@
     padding: 10px;
     background-image: radial-gradient(circle, rgba(128,81,241,.2) 0%, rgba(128,81,241,0) 100%);
     background-position: center 120%;
+    z-index: 9999;
     .navBtn {
         background: transparent;
         border: none;
