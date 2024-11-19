@@ -29,9 +29,7 @@ CMD ["npm", "run", "dev", "--", "--host"]
 # PRODUCTION
 ################################
 FROM builder-base as prod
-
 COPY . /app/
-
 RUN npm run build
-
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 CMD ["npm", "run", "preview", "--", "--host"]
