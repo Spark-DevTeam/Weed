@@ -11,12 +11,33 @@
     }
 }
 
+.plant{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-image: url('../images/weeds.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    padding-top: 38px;
+}
+
 .main {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-top: 25px;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(0deg, #8051F1 -5.45%, rgba(128, 81, 241, 0) 55.06%, rgba(128, 81, 241, 0) 91.36%);
+        height: 120px;
+        width: 100%;
+        filter: blur(80px);
+    }
     .name {
         display: flex;
         justify-content: center;
@@ -33,6 +54,9 @@
     }
     .points {
         margin-top: 40px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
         span {
             color: #8051F1;
             font-size: 35px;
@@ -71,8 +95,7 @@
     }
 
     .growing-wrapepr {
-        position: absolute;
-        top: 45%;
+
 
         display: flex;
         flex-direction: column;
@@ -83,7 +106,7 @@
             margin-bottom: 20px;
             .unactive {
                 display: flex;
-                justify-content: center;
+                justify-content: flex-end;
                 align-items: center;
                 height: 60px;
                 border: solid #535356 1px;
@@ -94,10 +117,10 @@
                 radial-gradient(circle, rgba(83,83,86,0.2) 0%, rgba(83,83,86,0.0946) 77%, rgba(83,83,86,0.06) 100%);
                 background-size: cover;
                 background-position: center;
-    
+                padding: 0 20px;
                 color: #535356;
-                img {
-                    margin-right: 10px;
+                &-timer{
+                    margin-left: 15px;
                 }
             }
             .start {

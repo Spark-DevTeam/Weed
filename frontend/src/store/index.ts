@@ -63,6 +63,7 @@ export const useUserStore = create<Store>((set, get) => ({
       });
       const { token } = response.data;
       set({ userToken: token });
+      return token;
     } catch (e) {
       console.error(e);
     }

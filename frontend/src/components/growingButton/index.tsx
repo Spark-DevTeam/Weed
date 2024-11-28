@@ -1,6 +1,7 @@
 import '@styles/Main.scss';
 
 import { useEffect, useState } from 'react';
+import lightningGray from '@images/lightning-gray.png';
 
 import { useUserStore } from '@/store';
 
@@ -10,7 +11,7 @@ export function GrowingButton() {
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
   useEffect(() => {
-    if (!lastPressTime) return; // Если времени нет, ничего не делаем
+    if (!lastPressTime) return;
 
     const lastPressDate = new Date(lastPressTime);
     const nextPressDate = new Date(
@@ -27,13 +28,9 @@ export function GrowingButton() {
         setTimeLeft(remainingTime);
       }
     };
-
-    // Первоначальный расчет
     updateRemainingTime();
-
     const interval = setInterval(updateRemainingTime, 1000);
 
-    // Очищаем интервал при размонтировании компонента
     return () => clearInterval(interval);
   }, [lastPressTime]);
 
@@ -41,14 +38,21 @@ export function GrowingButton() {
     const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((time % (1000 * 60)) / 1000);
-    return `${hours}h ${minutes}m ${seconds}s`;
+    return `${hours}h ${minutes}m`;
   };
 
   return (
     <div className='growing'>
       {timeLeft > 0 ? (
         <div className='unactive'>
-          <span>Time to claim left: {formatTimeLeft(timeLeft)}</span>
+          <div className='flex align-center gap-10'>
+            <img src={lightningGray} alt='Lightning'></img>
+            <p>Growing</p>
+            <p>25,008</p>
+          </div>
+          <div className='unactive-timer'>
+            <p className='fs-10'>{formatTimeLeft(timeLeft)}</p>
+          </div>
         </div>
       ) : (
         <div className='claim' style={{ cursor: 'pointer' }} onClick={claim}>

@@ -6,6 +6,7 @@ import growing1 from '@images/growing1.png';
 import growing2 from '@images/growing2.png';
 import growing3 from '@images/growing3.png';
 import weeds from '@images/weeds.png';
+import trueImg from '@images/true.png';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -81,8 +82,6 @@ export const Main = () => {
     setShowPopup(false);
   };
 
-  console.log(isLoading, claimAt);
-
   return (
     <div className='main'>
       <div className='blind'>
@@ -92,14 +91,12 @@ export const Main = () => {
         <span>{name}</span>
       </div>
       <div className='points'>
+        <img height={32} src={trueImg} alt='true' />
         <span>{balance}</span>
       </div>
       <NavLink to={ROUTES.game} className='game-button'>
         TAP TO GROW
       </NavLink>
-      <div>
-        <img src={weeds} alt='Weeds' />
-      </div>
       <div className='growing-wrapepr'>
         <div className='plant'>
           <img src={getPlantImage()} alt='Growing plant' />

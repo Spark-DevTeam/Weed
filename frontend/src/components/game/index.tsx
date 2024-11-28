@@ -27,8 +27,8 @@ const Circle: React.FC<CircleProps> = ({ isGreen, onClick, position }) => {
       onClick={onClick}
       className={`circle-image ${animate ? 'animate' : ''}`}
       style={{
-        top: `${position.top}px`,
-        left: `${position.left}px`,
+        top: `${position.top - 50 > 0 ? position.top - 50 : 0}px`,
+        left: `${position.left -50 > 0 ? position.left - 50 : 0}px`,
         width: '50px',
         height: '50px',
         position: 'absolute',

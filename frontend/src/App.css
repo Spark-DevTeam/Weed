@@ -1,0 +1,16 @@
+.flex{
+    display: flex;
+}
+
+.align-center{
+    align-items: center;
+}
+
+.gap-10{
+    gap: 10px;
+}
+
+.fs-10{
+    font-size: 10px;
+    font-weight: 400;
+}
