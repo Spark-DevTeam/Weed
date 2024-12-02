@@ -84,3 +84,17 @@ class LevelOut(Schema):
 class GameOut(Schema):
     uuid: uuid.UUID
     generated: list[LevelOut]
+
+
+class CoinIn(Schema):
+    levelIndex: int
+    stageIndex: int
+    timeLeft: int
+    timestamp: str
+    coinX: int
+    coinY: int
+
+
+class GameIn(Schema):
+    uuid: uuid.UUID
+    data: list[CoinIn]

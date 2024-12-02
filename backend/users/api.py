@@ -13,6 +13,7 @@ from .schemas import (
     ReferralsOut,
     ScreenIn,
     GameOut,
+    GameIn,
 )
 import jwt
 from django.conf import settings
@@ -26,12 +27,10 @@ from economic import (
     WEED_PER_CLICK,
     TOTAL_LEVELS,
     BASE_BAD,
-    LEVELS_REWARDS,
     TOTAL_STAGES,
     LEVEL_TIMES,
 )
 import random
-import uuid
 
 router = Router()
 
@@ -217,7 +216,7 @@ async def get_referrals(request: WSGIRequest | ASGIRequest):
     async for i in (
         Referrals.objects.filter(inviter=request.auth)
         .select_related("invited")
-        .order_by("-balance")
+        .order_by("-summary")
         .all()
     ):
         resp.append(i.invited)
@@ -304,7 +303,22 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     return 200, {"uuid": instance.uuid, "generated": resp}
 
 
-@router.post("/game/{uuid}/", auth=authenticate, response={200: UserOut})
-async def finish_game(request: WSGIRequest | ASGIRequest, uuid: uuid.UUID):
-    instance = await TgUser.objects.aget(id=request.auth)
-    return 200, instance
+@router.post("/game/", auth=authenticate, response={200: UserOut, 400: DetailOut})
+async def finish_game(request: WSGIRequest | ASGIRequest, payload: GameIn):
+    user = await TgUser.objects.aget(id=request.auth)
+
+    try:
+        game = await Game.objects.aget(uuid=payload.uuid)
+    except Game.DoesNotExist:
+        return 400, {"detail": "Bad game"}
+
+    if game.data.get("resp"):
+        return 400, {"detail": "Already played"}
+
+    game.data["resp"] = payload.data
+
+    user.balance += len(payload.data * 10)
+    await user.asave()
+    await game.asave()
+
+    return 200, user

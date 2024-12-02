@@ -1,4 +1,4 @@
-from settings.base import * # noqa
+from settings.base import *  # noqa
 
 SECRET_KEY = "django-insecure-pfuh1ba#e)xi^4##++3zkv-8*n_-(c7r+gh+cn-z@bs))t=!t2"
 DEBUG = True
