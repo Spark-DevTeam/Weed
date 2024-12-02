@@ -107,8 +107,12 @@
 
 .game-info {
   position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   top: 20px;
-  right: 20px;
+  padding: 0 10px;
+  width: 100%;
   font-size: 14px;
   color: #333;
   .lvl {
@@ -116,6 +120,11 @@
     span {
       color: #8824F5;
     }
+  }
+  .score{
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
   }
 }
 

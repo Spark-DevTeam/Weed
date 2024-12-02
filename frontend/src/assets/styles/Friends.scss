@@ -90,12 +90,14 @@
         align-items: center;
         p {
             color: #535356;
+            text-align: center;
         }
     }
     
     .buttons {
         position: fixed;
         bottom: 90px;
+        padding: 0 10px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -105,8 +107,8 @@
             justify-content: center;
             align-items: center;
             height: 60px;
-            width: 25%;
-            margin-left: 15px;
+            width: 100%;
+            margin: 0 10px;
             border: solid #8051F1 1px; /* Изменён цвет границы на #8051F1 */
             border-radius: 15px;
             background: 

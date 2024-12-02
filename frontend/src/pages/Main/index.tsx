@@ -101,7 +101,7 @@ export const Main = () => {
         <div className='plant'>
           <img src={getPlantImage()} alt='Growing plant' />
         </div>
-        <div className='growing'>
+        {/* <div className='growing'>
           {!isGrowing && earnedPoints === 0 && (
             <div className='start' onClick={handleStartGrowing}>
               <span>Start Growing</span>
@@ -121,7 +121,7 @@ export const Main = () => {
               </span>
             </div>
           )}
-        </div>
+        </div> */}
         <GrowingButton />
       </div>
       {showPopup && <Popup onClose={closePopup} />}

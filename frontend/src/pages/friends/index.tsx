@@ -3,31 +3,54 @@ import '@styles/Friends.scss';
 import blind from '@images/blind.png';
 import friend from '@images/friend.png';
 import noFriends from '@images/noFriends.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { BACKEND_URL } from '@/utils';
+import { useUserStore } from '@/store';
 
 export const Friends = () => {
-  // Example state to simulate if there are friends or not
-  const [friends, setFriends] = useState([
-    {
-      name: 'Huden',
-      points: 2500320,
-      friendsCount: 5,
-    },
-    {
-      name: 'Huden',
-      points: 2500320,
-      friendsCount: 5,
-    },
-  ]);
+  const { userToken, setUser } = useUserStore();
+
+  const [friends, setFriends] = useState<any>([]);
+
+  async function getFriends() {
+    const response = await axios.get<ITask[]>(`${BACKEND_URL}/users/referrals/`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userToken,
+      },
+    });
+
+    const data = response.data;
+
+    console.log(response.data);
+
+    setFriends(data);
+  }
+
+  async function getClaim() {
+    const response = await axios.post<any>(`${BACKEND_URL}/users/referrals/`,{}, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userToken,
+      },
+    });
+
+    const data = response.data;
+
+    setUser(data);
+
+    setFriends(data);
+  }
+
+  useEffect(() => {
+    getFriends();
+  }, []);
+
 
   const inviteFriend = () => {
-    // This function simulates inviting a new friend
-    const newFriend = {
-      name: 'New Friend',
-      points: 0,
-      friendsCount: 0,
-    };
-    setFriends([...friends, newFriend]); // Update the state to add a new friend
+    console.log('invite friend');
+   
   };
 
   return (
@@ -41,9 +64,9 @@ export const Friends = () => {
         their earnings
       </div>
 
-      {friends.length > 0 ? (
+      {friends.friends && friends.friends.length > 0 ? (
         <div className='friends-list'>
-          {friends.map((friendData, index) => (
+          {friends.friends.map((friendData:any, index:number) => (
             <div className='item' key={index}>
               <div className='left'>
                 <div className='ava'></div>
@@ -71,7 +94,7 @@ export const Friends = () => {
       )}
 
       <div className='buttons'>
-        <button className='claim'>Claim 25,008</button>
+        { <button className='claim' onClick={getClaim}>Claim {friends.summary}</button>}
         <button className='invite' onClick={inviteFriend}>Invite</button>
       </div>
     </div>

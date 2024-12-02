@@ -34,6 +34,7 @@ interface Store {
   isLoading: boolean;
   getToken: (data: TgUserData) => Promise<void>;
   getUser: () => Promise<void>;
+  setUser: (user: User) => void;
   claim: () => Promise<void>;
   updateUserBalance: (newBalance: number) => void;
 }
@@ -68,6 +69,8 @@ export const useUserStore = create<Store>((set, get) => ({
       console.error(e);
     }
   },
+
+  setUser: (user: User) => set({ user }),
 
   getUser: async () => {
     try {

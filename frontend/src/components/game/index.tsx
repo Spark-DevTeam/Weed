@@ -4,6 +4,9 @@ import falsee from '@images/false.png';
 import truee from '@images/true.png';
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { BACKEND_URL } from '@/utils';
+import { useUserStore } from '@/store';
 
 interface CircleProps {
   isGreen: boolean;
@@ -14,6 +17,7 @@ interface CircleProps {
 // Компонент для отображения круга (монеты)
 const Circle: React.FC<CircleProps> = ({ isGreen, onClick, position }) => {
   const [animate, setAnimate] = useState(false);
+
 
   useEffect(() => {
     setAnimate(true);
@@ -59,6 +63,8 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
   const [circles, setCircles] = useState<React.ReactNode[]>([]); // Рендеримые круги
   const [countdown, setCountdown] = useState<number | null>(3); // Обратный отсчет перед началом
   const [clickData, setClickData] = useState<ClickData[]>([]); // Данные о кликах
+  const [score, setScore] = useState(0); // Счетчик очков
+  const { userToken } = useUserStore();
 
   // Получаем текущий уровень и стадию из данных игры
   const currentLevel = gameData.generated[levelIndex];
@@ -66,6 +72,7 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
 
   // Обработка клика по зеленой монете
   const handleGreenClick = (coinX: number, coinY: number) => {
+    setScore(score + 10);
     const newClickData: ClickData = {
       isGreen: true,
       levelIndex,
@@ -102,9 +109,23 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
     sendClickData(); // Отправляем данные при завершении игры
   };
 
+  async function sendGameData (data: any): Promise<void>{
+    try {
+      const response = await axios.post(`${BACKEND_URL}/users/game/${gameData.uuid}/`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userToken,
+        },
+      });
+      console.log(response.data);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   // Функция для отправки данных на сервер
   const sendClickData = async () => {
-    // Отправка данных кликов на сервер
+    sendGameData(clickData);
     console.log({ clicks: clickData });
   };
 
@@ -224,6 +245,9 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
       ) : (
         <>
           <div className='game-info'>
+            <div className='score'>
+              <p>Score: {score}</p>
+            </div>
             <div className='lvl'>
               LVL: <span>{currentLevel.level}</span> /{' '}
               {gameData.generated.length}

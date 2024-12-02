@@ -48,7 +48,7 @@ export function GrowingButton() {
           <div className='flex align-center gap-10'>
             <img src={lightningGray} alt='Lightning'></img>
             <p>Growing</p>
-            <p>25,008</p>
+            <p>100</p>
           </div>
           <div className='unactive-timer'>
             <p className='fs-10'>{formatTimeLeft(timeLeft)}</p>
