@@ -2,11 +2,20 @@ import '@styles/Game.scss';
 
 import falsee from '@images/false.png';
 import truee from '@images/true.png';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '@/utils';
 import { useUserStore } from '@/store';
+import pepeImg from '@images/game/blue-pepe.png';
+import dogeImg from '@images/game/doge.png';
+import littlePes from '@images/game/little-pes.png';
+import pepe from '@images/game/pepe.png';
+import pesYellow from '@images/game/pes-yellow.png';
+import vkDead from '@images/game/vk-dead.png';
+import pepeUhh from '@images/game/pepe-uhh.png';
+import pes from '@images/game/pes.png';
+import wikingPes from '@images/game/wiking-pes.png';
 
 interface CircleProps {
   isGreen: boolean;
@@ -17,7 +26,31 @@ interface CircleProps {
 // Компонент для отображения круга (монеты)
 const Circle: React.FC<CircleProps> = ({ isGreen, onClick, position }) => {
   const [animate, setAnimate] = useState(false);
+  const [randomImage, setRandomImage] = useState<string | null>(null);
 
+  const images = useMemo(() => [
+    pepeImg,
+    dogeImg,
+    littlePes,
+    pepe,
+    pesYellow,
+    vkDead,
+    pepeUhh,
+    pes,
+    wikingPes,
+  ], []);
+
+  const getRandomImage = useCallback(() => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
+  }, [images]);
+
+  // Устанавливаем случайное изображение один раз
+  useEffect(() => {
+    if (!randomImage) {
+      setRandomImage(getRandomImage());
+    }
+  }, [randomImage, getRandomImage]);
 
   useEffect(() => {
     setAnimate(true);
@@ -27,12 +60,12 @@ const Circle: React.FC<CircleProps> = ({ isGreen, onClick, position }) => {
 
   return (
     <img
-      src={isGreen ? truee : falsee}
+      src={isGreen ? truee : randomImage || getRandomImage()}
       onClick={onClick}
       className={`circle-image ${animate ? 'animate' : ''}`}
       style={{
         top: `${position.top - 50 > 0 ? position.top - 50 : 0}px`,
-        left: `${position.left -50 > 0 ? position.left - 50 : 0}px`,
+        left: `${position.left - 50 > 0 ? position.left - 50 : 0}px`,
         width: '50px',
         height: '50px',
         position: 'absolute',
@@ -42,6 +75,7 @@ const Circle: React.FC<CircleProps> = ({ isGreen, onClick, position }) => {
     />
   );
 };
+
 
 // Интерфейс для данных кликов с координатами
 interface ClickData {
@@ -69,6 +103,8 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
   // Получаем текущий уровень и стадию из данных игры
   const currentLevel = gameData.generated[levelIndex];
   const currentStageData = currentLevel.data[stageIndex];
+
+  
 
   // Обработка клика по зеленой монете
   const handleGreenClick = (coinX: number, coinY: number) => {
