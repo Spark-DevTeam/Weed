@@ -315,7 +315,7 @@ async def finish_game(request: WSGIRequest | ASGIRequest, payload: GameIn):
     if game.data.get("resp"):
         return 400, {"detail": "Already played"}
 
-    game.data["resp"] = payload.data.__dict__
+    game.data["resp"] = [i.dict() for i in payload.data]
 
     user.balance += len(payload.data * 10)
     await user.asave()
