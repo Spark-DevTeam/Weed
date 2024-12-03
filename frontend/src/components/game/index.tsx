@@ -1,6 +1,5 @@
 import '@styles/Game.scss';
 
-import falsee from '@images/false.png';
 import truee from '@images/true.png';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
