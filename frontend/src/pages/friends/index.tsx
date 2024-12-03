@@ -49,7 +49,7 @@ export const Friends = () => {
 
 
   const inviteFriend = () => {
-    const inviteLink = `https://t.me/profitweed_bot/startapp=${user.id}`;
+    const inviteLink = `https://t.me/profitweed_bot/start=${user.code}`;
     const message = ``;
     const telegramURL = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(message)}`;
     window.open(telegramURL, "_blank");
