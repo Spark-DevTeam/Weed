@@ -5,73 +5,44 @@ import blind from '@images/blind.png';
 import growing1 from '@images/growing1.png';
 import growing2 from '@images/growing2.png';
 import growing3 from '@images/growing3.png';
-import weeds from '@images/weeds.png';
 import trueImg from '@images/true.png';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { Popup } from '@/components';
 import { useUserStore } from '@/store';
 import { ROUTES } from '@/utils/';
 
-const GROWING_DURATION = 2 * 1000;
-const POINTS_PER_GROW = 25000;
-
 export const Main = () => {
-  const [isGrowing, setIsGrowing] = useState(false);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [points, setPoints] = useState(250320);
-  const [earnedPoints, setEarnedPoints] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(0);
+  // const [earnedPoints, setEarnedPoints] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
 
-  const { user, isLoading } = useUserStore((state) => state);
-  const { balance, name, claimAt } = user;
+  const { user } = useUserStore((state) => state);
+  const { balance, name } = user;
 
-  useEffect(() => {
-    if (isGrowing && startTime) {
-      const timer = setInterval(() => {
-        const currentTime = new Date().getTime();
-        const timeElapsed = currentTime - startTime;
-        const timeRemaining = GROWING_DURATION - timeElapsed;
+  // const handleStartGrowing = () => {
+  //   setIsGrowing(true);
+  //   setStartTime(new Date().getTime());
+  //   setEarnedPoints(0);
+  //   // setTimeLeft(GROWING_DURATION / 1000);
+  // };
 
-        if (timeRemaining <= 0) {
-          clearInterval(timer);
-          setIsGrowing(false);
-          setEarnedPoints(POINTS_PER_GROW);
-          setTimeLeft(0);
-        } else {
-          setTimeLeft(Math.ceil(timeRemaining / 1000));
-        }
-      }, 100);
+  // const handleClaimPoints = () => {
+  //   if (!isGrowing && earnedPoints > 0) {
+  //     const newPoints = points + earnedPoints;
+  //     setPoints(newPoints);
+  //     setEarnedPoints(0);
 
-      return () => clearInterval(timer);
-    }
-  }, [isGrowing, startTime]);
-
-  const handleStartGrowing = () => {
-    setIsGrowing(true);
-    setStartTime(new Date().getTime());
-    setEarnedPoints(0);
-    setTimeLeft(GROWING_DURATION / 1000);
-  };
-
-  const handleClaimPoints = () => {
-    if (!isGrowing && earnedPoints > 0) {
-      const newPoints = points + earnedPoints;
-      setPoints(newPoints);
-      setEarnedPoints(0);
-
-      if (newPoints >= 300000) {
-        setShowPopup(true);
-      }
-    }
-  };
+  //     if (newPoints >= 300000) {
+  //       setShowPopup(true);
+  //     }
+  //   }
+  // };
 
   const getPlantImage = () => {
-    if (points >= 300000) {
+    if (user.balance>= 300000) {
       return growing3;
-    } else if (points >= 200000) {
+    } else if (user.balance >= 200000) {
       return growing2;
     } else {
       return growing1;
