@@ -298,12 +298,12 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
 
         resp.append({"level": i + 1, "data": _pre_resp, "time": LEVEL_TIMES[i]})
 
-    instance = await Game.objects.acreate(data=resp, user_id=request.auth)
+    instance = await Game.objects.acreate(data={"gen": resp}, user_id=request.auth)
 
     return 200, {"uuid": instance.uuid, "generated": resp}
 
 
-@router.post("/game/", auth=authenticate, response={200: UserOut, 400: DetailOut})
+@router.put("/game/", auth=authenticate, response={200: UserOut, 400: DetailOut})
 async def finish_game(request: WSGIRequest | ASGIRequest, payload: GameIn):
     user = await TgUser.objects.aget(id=request.auth)
 
