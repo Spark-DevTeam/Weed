@@ -106,7 +106,6 @@
             margin-bottom: 20px;
             .unactive {
                 display: flex;
-                justify-content: flex-end;
                 align-items: center;
                 height: 60px;
                 border: solid #535356 1px;
@@ -121,6 +120,9 @@
                 color: #535356;
                 &-timer{
                     margin-left: 15px;
+                }
+                div{
+                    flex: 33.3%;
                 }
             }
             .start {

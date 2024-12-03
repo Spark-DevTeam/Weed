@@ -9,7 +9,7 @@ import { BACKEND_URL } from '@/utils';
 import { useUserStore } from '@/store';
 
 export const Friends = () => {
-  const { userToken, setUser } = useUserStore();
+  const { userToken, setUser, user } = useUserStore();
 
   const [friends, setFriends] = useState<any>([]);
 
@@ -49,8 +49,10 @@ export const Friends = () => {
 
 
   const inviteFriend = () => {
-    console.log('invite friend');
-   
+    const inviteLink = `https://t.me/profitweed_bot/startapp=${user.id}`;
+    const message = ``;
+    const telegramURL = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(message)}`;
+    window.open(telegramURL, "_blank");
   };
 
   return (

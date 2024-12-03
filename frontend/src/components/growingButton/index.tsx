@@ -45,6 +45,7 @@ export function GrowingButton() {
     <div className='growing'>
       {timeLeft > 0 ? (
         <div className='unactive'>
+          <div></div>
           <div className='flex align-center gap-10'>
             <img src={lightningGray} alt='Lightning'></img>
             <p>Growing</p>
