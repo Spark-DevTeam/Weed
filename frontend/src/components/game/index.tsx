@@ -49,7 +49,7 @@ interface ClickData {
   levelIndex: number; // Индекс уровня
   stageIndex: number; // Индекс стадии
   timeLeft: number; // Оставшееся время на уровне
-  timestamp: number; // Время клика
+  timestamp: any; // Время клика
   coinX: number; // Координата X нажатой монеты
   coinY: number; // Координата Y нажатой монеты
 }
@@ -64,7 +64,7 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
   const [countdown, setCountdown] = useState<number | null>(3); // Обратный отсчет перед началом
   const [clickData, setClickData] = useState<ClickData[]>([]); // Данные о кликах
   const [score, setScore] = useState(0); // Счетчик очков
-  const { userToken } = useUserStore();
+  const { userToken, setUser } = useUserStore();
 
   // Получаем текущий уровень и стадию из данных игры
   const currentLevel = gameData.generated[levelIndex];
@@ -78,7 +78,7 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
       levelIndex,
       stageIndex,
       timeLeft,
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(),
       coinX, // Добавляем координаты
       coinY, // Добавляем координаты
     };
@@ -100,7 +100,7 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
       levelIndex,
       stageIndex,
       timeLeft,
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(),
       coinX, // Добавляем координаты
       coinY, // Добавляем координаты
     };
@@ -111,13 +111,13 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
 
   async function sendGameData (data: any): Promise<void>{
     try {
-      const response = await axios.post(`${BACKEND_URL}/users/game/${gameData.uuid}/`, data, {
+      const response = await axios.put(`${BACKEND_URL}/users/game/`, data, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: userToken,
         },
       });
-      console.log(response.data);
+      setUser(response.data);
     } catch (e) {
       console.error(e);
     }
@@ -125,7 +125,7 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
 
   // Функция для отправки данных на сервер
   const sendClickData = async () => {
-    sendGameData(clickData);
+    sendGameData({data:clickData, uuid: gameData.uuid});
     console.log({ clicks: clickData });
   };
 
