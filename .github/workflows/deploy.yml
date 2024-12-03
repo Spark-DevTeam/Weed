@@ -28,6 +28,7 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> $GITHUB_ENV
           echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> $GITHUB_ENV
           echo URI=${{ secrets.URI }} >> $GITHUB_ENV
+          echo GIT_SHA=${{ github.sha }} >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -42,9 +43,9 @@ jobs:
           push: false
           load: true
           target: prod
-          tags: weed-backend:latest
-          cache-from: type=local,src=/home/github/cache/backend
-          cache-to: type=local,dest=/home/github/cache/backend
+          tags: weed-backend:${{ github.sha }}
+          cache-from: type=gha,scope=backend-cache
+          cache-to: type=gha,scope=backend-cache,mode=max
 
       - name: Build and push bot
         uses: docker/build-push-action@v5
@@ -53,9 +54,9 @@ jobs:
           push: false
           load: true
           target: prod
-          tags: weed-bot:latest
-          cache-from: type=local,src=/home/github/cache/bot
-          cache-to: type=local,dest=/home/github/cache/bot
+          tags: weed-bot:${{ github.sha }}
+          cache-from: type=gha,scope=bot-cache
+          cache-to: type=gha,scope=bot-cache,mode=max
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
@@ -64,9 +65,12 @@ jobs:
           push: false
           load: true
           target: prod
-          tags: weed-front:latest
-          cache-from: type=local,src=/home/github/cache/frontend
-          cache-to: type=local,dest=/home/github/cache/frontend
+          tags: weed-front:${{ github.sha }}
+          cache-from: type=gha,scope=frontend-cache
+          cache-to: type=gha,scope=frontend-cache,mode=max
 
       - name: deploy
         run: docker stack deploy --prune --with-registry-auth -c docker-stack.yaml weed
+
+      - name: Remove unused Images
+        run: docker system prune -f

@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
   backend:
-    image: weed-backend:latest 
+    image: weed-backend:${GIT_SHA}
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -34,7 +34,7 @@ services:
       restart_policy:
         condition: on-failure
   bot:
-    image: weed-bot:latest
+    image: weed-bot:${GIT_SHA}
     build:
       context: ./bot
       dockerfile: Dockerfile
@@ -48,7 +48,7 @@ services:
       restart_policy:
         condition: on-failure
   frontend:
-    image: weed-front:latest
+    image: weed-front:${GIT_SHA}
     build:
       context: ./frontend
       dockerfile: Dockerfile
