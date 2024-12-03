@@ -6,4 +6,4 @@ export const ROUTES = {
   game: '/game',
 };
 
-export const BACKEND_URL = "http://localhost:8000/api/v1";
+export const BACKEND_URL = "https://fudless.space/api/v1";
