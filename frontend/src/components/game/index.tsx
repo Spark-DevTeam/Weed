@@ -1,55 +1,30 @@
 import '@styles/Game.scss';
 
 import truee from '@images/true.png';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect,  useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '@/utils';
 import { useUserStore } from '@/store';
-import pepeImg from '@images/game/blue-pepe.png';
-import dogeImg from '@images/game/doge.png';
-import littlePes from '@images/game/little-pes.png';
-import pepe from '@images/game/pepe.png';
-import pesYellow from '@images/game/pes-yellow.png';
-import vkDead from '@images/game/vk-dead.png';
-import pepeUhh from '@images/game/pepe-uhh.png';
-import pes from '@images/game/pes.png';
-import wikingPes from '@images/game/wiking-pes.png';
+import bomeLogo from '@images/game/bome-logo.svg';
+import bonkLogo from '@images/game/bonk-logo.svg';
+import brettLogo from '@images/game/brett-logo.svg';
+import dogeCoinLogo from '@images/game/dogecoin-doge-logo.svg';
+import dogsLogo from '@images/game/dogs-logo.svg';
+import pepeLogo from '@images/game/pepe-logo.svg';
+import ponkeLogo from '@images/game/ponke-logo.svg';
 
 interface CircleProps {
   isGreen: boolean;
   onClick: () => void;
   position: { top: number; left: number };
+  image?: string;
 }
 
 // Компонент для отображения круга (монеты)
-const Circle: React.FC<CircleProps> = ({ isGreen, onClick, position }) => {
+const Circle: React.FC<CircleProps> = ({ isGreen, image, onClick, position }) => {
   const [animate, setAnimate] = useState(false);
-  const [randomImage, setRandomImage] = useState<string | null>(null);
-
-  const images = useMemo(() => [
-    pepeImg,
-    dogeImg,
-    littlePes,
-    pepe,
-    pesYellow,
-    vkDead,
-    pepeUhh,
-    pes,
-    wikingPes,
-  ], []);
-
-  const getRandomImage = useCallback(() => {
-    const randomIndex = Math.floor(Math.random() * images.length);
-    return images[randomIndex];
-  }, [images]);
-
-  // Устанавливаем случайное изображение один раз
-  useEffect(() => {
-    if (!randomImage) {
-      setRandomImage(getRandomImage());
-    }
-  }, [randomImage, getRandomImage]);
+  
 
   useEffect(() => {
     setAnimate(true);
@@ -59,11 +34,11 @@ const Circle: React.FC<CircleProps> = ({ isGreen, onClick, position }) => {
 
   return (
     <img
-      src={isGreen ? truee : randomImage || getRandomImage()}
+      src={isGreen ? truee : image}
       onClick={onClick}
       className={`circle-image ${animate ? 'animate' : ''}`}
       style={{
-        top: `${position.top - 50 > 0 ? position.top - 50 : 0}px`,
+        top: `${position.top - 100 > 50 ? position.top - 100 : 50}px`,
         left: `${position.left - 50 > 0 ? position.left - 50 : 0}px`,
         width: '50px',
         height: '50px',
@@ -165,12 +140,40 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
   };
 
   const renderCircles = () => {
+    const imageCount: Record<string, number> = {}; // Хранит количество каждого изображения
+  
+    const images = [
+      bomeLogo,
+      bonkLogo,
+      brettLogo,
+      dogeCoinLogo,
+      dogsLogo,
+      pepeLogo,
+      ponkeLogo,
+    ];
+  
+    // Функция для получения случайного изображения с ограничением
+    const getRandomImage = () => {
+      const availableImages = images.filter((img) => (imageCount[img] || 0) < 2); // Учитываем ограничение
+      if (availableImages.length === 0) {
+        return null; // Если изображения исчерпаны, возвращаем null
+      }
+      const randomIndex = Math.floor(Math.random() * availableImages.length);
+      const selectedImage = availableImages[randomIndex];
+      imageCount[selectedImage] = (imageCount[selectedImage] || 0) + 1;
+      return selectedImage;
+    };
+  
+    // Генерация кругов
     const circlesArray = currentStageData.coins.map((coin, index) => {
       const position = { top: coin.y, left: coin.x }; // Позиция монеты
+      const randomImage = getRandomImage(); // Генерация изображения
+  
       return (
         <Circle
           key={`${index}-${coin.x}-${coin.y}-${coin.type}`}
           isGreen={coin.type === 'good'}
+          image={randomImage || ''} // Подставляем случайное изображение
           onClick={
             coin.type === 'good'
               ? () => handleGreenClick(coin.x, coin.y)
@@ -180,8 +183,12 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
         />
       );
     });
-    setCircles(circlesArray); // Обновляем состояние с кругами для рендеринга
+
+    setCircles(circlesArray);  
+    return circlesArray; // Возвращаем массив кругов
   };
+  
+  
 
   // Ререндер кругов при изменении стадии или обратного отсчета
   useEffect(() => {
