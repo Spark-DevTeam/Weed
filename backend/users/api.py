@@ -29,10 +29,20 @@ from economic import (
     BASE_BAD,
     TOTAL_STAGES,
     LEVEL_TIMES,
+    MINIMUM_PERCENTAGE,
 )
 import random
+import math
 
 router = Router()
+
+
+def is_far_enough(new_x, new_y, existing_coordinates, min_distance):
+    for (x, y) in existing_coordinates:
+        distance = math.sqrt((new_x - x) ** 2 + (new_y - y) ** 2)
+        if distance < min_distance:
+            return False
+    return True
 
 
 async def validate(hash_str, init_data, token, c_str="WebAppData"):
@@ -274,32 +284,25 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
 
     for i in range(TOTAL_LEVELS):
         _pre_resp = []
+        existing_coordinates = []
 
         for j in range(TOTAL_STAGES):
             _ = []
-            for k in range(BASE_BAD + j + 1):
-                _.append(
-                    {
-                        "type": "bad",
-                        "x": random.randint(0, payload.width),
-                        "y": random.randint(
-                            ((payload.height - 35) * ((BASE_BAD + j) * k)),
-                            (payload.height - 35) / ((BASE_BAD + j) * (k + 1)),
-                        ),
-                    }
-                )
-                if k == (BASE_BAD + j):
-                    _.append(
-                        {
-                            "type": "good",
-                            "x": random.randint(0, payload.width),
-                            "y": random.randint(
-                                ((payload.height - 35) * ((BASE_BAD + j) * k)),
-                                (payload.height - 35) / ((BASE_BAD + j) * (k + 1)),
-                            ),
-                        }
-                    )
+            for k in range(1, BASE_BAD + j + 1):
+                while True:
+                    _x = random.randint(0, payload.width)
+                    _y = random.randint(0, payload.height - 35)
 
+                    if is_far_enough(_x, _y, existing_coordinates, min(payload.width, payload.height) * MINIMUM_PERCENTAGE):
+                        existing_coordinates.append((_x, _y))
+                        _.append({
+                            "type": "bad",
+                            "x": _x,
+                            "y": _y
+                        })
+                        break
+
+            _[-1]["type"] = "good"
             _pre_resp.append({"stage": j + 1, "coins": _})
 
         resp.append({"level": i + 1, "data": _pre_resp, "time": LEVEL_TIMES[i]})
