@@ -277,22 +277,28 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
 
         for j in range(TOTAL_STAGES):
             _ = []
-            for k in range(BASE_BAD + j):
+            for k in range(BASE_BAD + j + 1):
                 _.append(
                     {
                         "type": "bad",
                         "x": random.randint(0, payload.width),
-                        "y": random.randint(0, payload.height),
+                        "y": random.randint(
+                            ((payload.height - 35) * ((BASE_BAD + j) * k)),
+                            (payload.height - 35) / ((BASE_BAD + j) * (k + 1)),
+                        ),
                     }
                 )
-
-            _.append(
-                {
-                    "type": "good",
-                    "x": random.randint(0, payload.width),
-                    "y": random.randint(0, payload.height),
-                }
-            )
+                if k == (BASE_BAD + j):
+                    _.append(
+                        {
+                            "type": "good",
+                            "x": random.randint(0, payload.width),
+                            "y": random.randint(
+                                ((payload.height - 35) * ((BASE_BAD + j) * k)),
+                                (payload.height - 35) / ((BASE_BAD + j) * (k + 1)),
+                            ),
+                        }
+                    )
 
             _pre_resp.append({"stage": j + 1, "coins": _})
 
