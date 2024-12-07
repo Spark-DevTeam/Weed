@@ -4,6 +4,7 @@ import './App.css'
 import { PageRouter } from '@/routes/PageRouter.tsx';
 import { useUserStore } from '@/store';
 import { BACKEND_URL } from '@/utils';
+import ImagePreloader from './components/ImagePreloader/ImagePreloader';
 
 
 const App: React.FC = () => {
@@ -74,6 +75,7 @@ async function waitToken(telegramData: TgUserData) {
 
   return (
     <div>
+      <ImagePreloader/>
       {userToken && <PageRouter />}
     </div>
   );
