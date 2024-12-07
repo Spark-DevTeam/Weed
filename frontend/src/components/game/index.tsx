@@ -13,7 +13,10 @@ import dogeCoinLogo from '@images/game/dogecoin-doge-logo.svg';
 import dogsLogo from '@images/game/dogs-logo.svg';
 import pepeLogo from '@images/game/pepe-logo.svg';
 import ponkeLogo from '@images/game/ponke-logo.svg';
-
+import mangoMarketsMngoLogo from '@images/game/mango-markets-mngo-logo.svg';
+import memeMemeLogo from '@images/game/meme-meme-logo.svg';
+import pancakeSwap from '@images/game/pancakeswap-cake-logo.svg';
+import simonsCat from '@images/game/simonscat-cat-logo.svg';
 interface CircleProps {
   isGreen: boolean;
   onClick: () => void;
@@ -37,8 +40,9 @@ const Circle: React.FC<CircleProps> = ({ isGreen, image, onClick, position }) =>
       src={isGreen ? truee : image}
       onClick={onClick}
       className={`circle-image ${animate ? 'animate' : ''}`}
+      loading='lazy'
       style={{
-        top: `${position.top - 100 > 50 ? position.top - 100 : 50}px`,
+        top: `${position.top - 100 > 50 ? position.top - 100 : position.top + 50}px`,
         left: `${position.left - 50 > 0 ? position.left - 50 : 0}px`,
         width: '50px',
         height: '50px',
@@ -150,11 +154,15 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
       dogsLogo,
       pepeLogo,
       ponkeLogo,
+      mangoMarketsMngoLogo,
+      memeMemeLogo,
+      pancakeSwap,
+      simonsCat
     ];
   
     // Функция для получения случайного изображения с ограничением
     const getRandomImage = () => {
-      const availableImages = images.filter((img) => (imageCount[img] || 0) < 2); // Учитываем ограничение
+      const availableImages = images.filter((img) => (imageCount[img] || 0) < 1); // Учитываем ограничение
       if (availableImages.length === 0) {
         return null; // Если изображения исчерпаны, возвращаем null
       }
@@ -279,8 +287,8 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
         </div>
       ) : levelComplete ? (
         <div className='level-complete-menu'>
-          <h1>Уровень {currentLevel.level} пройден!</h1>
-          <button onClick={handleNextLevel}>Продолжить</button>
+          <h1>Level {currentLevel.level} completed!</h1>
+          <button onClick={handleNextLevel}>Next</button>
         </div>
       ) : countdown !== null ? (
         <div className='countdown'>{countdown}</div>
