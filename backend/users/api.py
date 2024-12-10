@@ -1,7 +1,7 @@
 from ninja import Router
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.handlers.asgi import ASGIRequest
-from .models import TgUser, Referrals, UserDailyReward, DailyReward, Game
+from .models import TgUser, Referrals, UserDailyReward, DailyReward, Game, Coin
 from .schemas import (
     UserInitSchema,
     UserOut,
@@ -38,7 +38,7 @@ router = Router()
 
 
 def is_far_enough(new_x, new_y, existing_coordinates, min_distance):
-    for (x, y) in existing_coordinates:
+    for x, y in existing_coordinates:
         distance = math.sqrt((new_x - x) ** 2 + (new_y - y) ** 2)
         if distance < min_distance:
             return False
@@ -281,6 +281,10 @@ async def claim(request: WSGIRequest | ASGIRequest):
 @router.post("/game/", auth=authenticate, response={200: GameOut})
 async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     resp = []
+    coins = []
+
+    async for i in Coin.objects.all():
+        coins.append(i)
 
     for i in range(TOTAL_LEVELS):
         _pre_resp = []
@@ -288,21 +292,31 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
 
         for j in range(TOTAL_STAGES):
             _ = []
-            for k in range(1, BASE_BAD + j + 1):
+            for k in range(1, BASE_BAD + j):
                 while True:
                     _x = random.randint(0, payload.width)
                     _y = random.randint(0, payload.height - 35)
 
-                    if is_far_enough(_x, _y, existing_coordinates, min(payload.width, payload.height) * MINIMUM_PERCENTAGE):
+                    if is_far_enough(
+                        _x,
+                        _y,
+                        existing_coordinates,
+                        min(payload.width, payload.height) * MINIMUM_PERCENTAGE,
+                    ):
                         existing_coordinates.append((_x, _y))
-                        _.append({
-                            "type": "bad",
-                            "x": _x,
-                            "y": _y
-                        })
+                        _.append(
+                            {
+                                "type": "bad",
+                                "x": _x,
+                                "y": _y,
+                                "image": coins.pop(random.randint(0, len(coins) - 1)),
+                            }
+                        )
                         break
 
+            _.append(random.choice(i))
             _[-1]["type"] = "good"
+
             _pre_resp.append({"stage": j + 1, "coins": _})
 
         resp.append({"level": i + 1, "data": _pre_resp, "time": LEVEL_TIMES[i]})
