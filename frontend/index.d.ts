@@ -45,6 +45,7 @@ interface ITask {
 
 interface Coin {
   type: string;
+  image?: string;
   x: number;
   y: number;
 }
