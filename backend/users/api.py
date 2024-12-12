@@ -286,7 +286,7 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     async for i in Coin.objects.all():
         coins.append(i)
 
-    if len(coins) == 0:
+    if len(coins) < TOTAL_STAGES + BASE_BAD:
         return 400, {"detail": "No coins"}
 
     for i in range(TOTAL_LEVELS):
@@ -295,8 +295,8 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
 
         for j in range(TOTAL_STAGES):
             _ = []
-            coins_duplicate = coins
-            for k in range(1, BASE_BAD + j):
+            coins_duplicate = coins.copy()
+            for k in range(1, BASE_BAD + j + 1):
                 while True:
                     _x = random.randint(0, payload.width)
                     _y = random.randint(0, payload.height - 35)
@@ -313,12 +313,12 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
                                 "type": "bad",
                                 "x": _x,
                                 "y": _y,
-                                "image": coins_duplicate.pop(random.randint(0, len(coins) - 1)),
+                                "image": (coins_duplicate.pop(random.randint(0, len(coins) - 1))).image.url,
                             }
                         )
                         break
 
-            _.append(random.choice(i))
+            _.append(random.choice(_))
             _[-1]["type"] = "good"
 
             _pre_resp.append({"stage": j + 1, "coins": _})
