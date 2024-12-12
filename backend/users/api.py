@@ -278,7 +278,7 @@ async def claim(request: WSGIRequest | ASGIRequest):
     return 200, instance
 
 
-@router.post("/game/", auth=authenticate, response={200: GameOut})
+@router.post("/game/", auth=authenticate, response={200: GameOut, 400: DetailOut})
 async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     resp = []
     coins = []
@@ -286,12 +286,16 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     async for i in Coin.objects.all():
         coins.append(i)
 
+    if len(coins) == 0:
+        return 400, {"detail": "No coins"}
+
     for i in range(TOTAL_LEVELS):
         _pre_resp = []
         existing_coordinates = []
 
         for j in range(TOTAL_STAGES):
             _ = []
+            coins_duplicate = coins
             for k in range(1, BASE_BAD + j):
                 while True:
                     _x = random.randint(0, payload.width)
@@ -309,7 +313,7 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
                                 "type": "bad",
                                 "x": _x,
                                 "y": _y,
-                                "image": coins.pop(random.randint(0, len(coins) - 1)),
+                                "image": coins_duplicate.pop(random.randint(0, len(coins) - 1)),
                             }
                         )
                         break
