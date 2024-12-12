@@ -68,6 +68,7 @@ class CoinOut(Schema):
     type: str
     x: float
     y: float
+    image: str
 
 
 class StageOut(Schema):

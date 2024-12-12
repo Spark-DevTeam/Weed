@@ -92,6 +92,26 @@ class Game(TimeBasedModel):
     cheat = models.BooleanField(default=False)
     bad_gen = models.BooleanField(default=False)
 
+    def __str__(self) -> str:
+        return f"{self.user.name}"
+
+    class Meta:
+        verbose_name = "Игра"
+        verbose_name_plural = "Игры"
+
+
+class Coin(TimeBasedModel):
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
+    name = models.CharField(verbose_name="Название")
+    image = models.ImageField(verbose_name="Картинка")
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name = "Монетка"
+        verbose_name_plural = "Монетки"
+
 
 @receiver(post_init, sender=TgUser)
 async def setup_ref_code(sender: ModelBase, instance: TgUser, **kwargs):
