@@ -313,7 +313,7 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
                                 "type": "bad",
                                 "x": _x,
                                 "y": _y,
-                                "image": (coins_duplicate.pop(random.randint(0, len(coins) - 1))).image.url,
+                                "image": (coins_duplicate.pop(random.randint(0, len(coins_duplicate) - 1))).image.url,
                             }
                         )
                         break
