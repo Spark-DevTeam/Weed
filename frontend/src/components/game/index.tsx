@@ -312,7 +312,7 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
               style={{ width: `${(timeLeft / currentLevel.time) * 100}%` }}
             />
           </div>
-          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <div style={{ position: 'relative', width: '100%', height: '90%', marginTop: '15%'}}>
             {circles}
           </div>
         </>
