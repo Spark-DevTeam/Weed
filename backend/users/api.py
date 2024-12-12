@@ -348,3 +348,13 @@ async def finish_game(request: WSGIRequest | ASGIRequest, payload: GameIn):
     await game.asave()
 
     return 200, user
+
+
+@router.get("/coins/", response={200: list[str]})
+async def get_coins(request: WSGIRequest | ASGIRequest):
+    resp = []
+
+    async for i in Coin.objects.all():
+        resp.append(i.image.url)
+
+    return 200, resp
