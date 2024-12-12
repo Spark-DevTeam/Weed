@@ -299,7 +299,7 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
               <p>Score: {score}</p>
             </div>
             <div>
-              <img src={currentStageData.coins.find(e => e.type === 'good')?.image} alt='Level Image' />
+              <img height={50} width={50} src={currentStageData.coins.find(e => e.type === 'good')?.image} alt='Level Image' />
             </div>
             <div className='lvl'>
               LVL: <span>{currentLevel.level}</span> /{' '}
