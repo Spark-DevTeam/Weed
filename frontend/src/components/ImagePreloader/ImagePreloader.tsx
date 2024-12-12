@@ -12,7 +12,6 @@
 import './ImagePreloader.scss'
 import { useEffect, useState } from 'react';
 import { getImages } from '@/utils/api';
-import { BACKEND_URL } from '@/utils';
 
 export default function ImagePreloader() {
     const [images, setImages] = useState([]);
