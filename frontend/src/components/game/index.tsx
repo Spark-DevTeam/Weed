@@ -1,22 +1,22 @@
 import '@styles/Game.scss';
 
-import truee from '@images/true.png';
+// import truee from '@images/true.png';
 import React, { useEffect,  useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '@/utils';
 import { useUserStore } from '@/store';
-import bomeLogo from '@images/game/bome-logo.svg';
-import bonkLogo from '@images/game/bonk-logo.svg';
-import brettLogo from '@images/game/brett-logo.svg';
-import dogeCoinLogo from '@images/game/dogecoin-doge-logo.svg';
-import dogsLogo from '@images/game/dogs-logo.svg';
-import pepeLogo from '@images/game/pepe-logo.svg';
-import ponkeLogo from '@images/game/ponke-logo.svg';
-import mangoMarketsMngoLogo from '@images/game/mango-markets-mngo-logo.svg';
-import memeMemeLogo from '@images/game/meme-meme-logo.svg';
-import pancakeSwap from '@images/game/pancakeswap-cake-logo.svg';
-import simonsCat from '@images/game/simonscat-cat-logo.svg';
+// import bomeLogo from '@images/game/bome-logo.svg';
+// import bonkLogo from '@images/game/bonk-logo.svg';
+// import brettLogo from '@images/game/brett-logo.svg';
+// import dogeCoinLogo from '@images/game/dogecoin-doge-logo.svg';
+// import dogsLogo from '@images/game/dogs-logo.svg';
+// import pepeLogo from '@images/game/pepe-logo.svg';
+// import ponkeLogo from '@images/game/ponke-logo.svg';
+// import mangoMarketsMngoLogo from '@images/game/mango-markets-mngo-logo.svg';
+// import memeMemeLogo from '@images/game/meme-meme-logo.svg';
+// import pancakeSwap from '@images/game/pancakeswap-cake-logo.svg';
+// import simonsCat from '@images/game/simonscat-cat-logo.svg';
 interface CircleProps {
   isGreen: boolean;
   onClick: () => void;
@@ -37,7 +37,8 @@ const Circle: React.FC<CircleProps> = ({ isGreen, image, onClick, position }) =>
 
   return (
     <img
-      src={isGreen ? truee : image}
+      // src={isGreen ? truee : image}
+      src={image}
       onClick={onClick}
       className={`circle-image ${animate ? 'animate' : ''}`}
       loading='lazy'
@@ -83,7 +84,6 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
   const currentStageData = currentLevel.data[stageIndex];
 
   
-
   // Обработка клика по зеленой монете
   const handleGreenClick = (coinX: number, coinY: number) => {
     setScore(score + 10);
@@ -144,44 +144,44 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
   };
 
   const renderCircles = () => {
-    const imageCount: Record<string, number> = {}; // Хранит количество каждого изображения
+    // const imageCount: Record<string, number> = {}; // Хранит количество каждого изображения
   
-    const images = [
-      bomeLogo,
-      bonkLogo,
-      brettLogo,
-      dogeCoinLogo,
-      dogsLogo,
-      pepeLogo,
-      ponkeLogo,
-      mangoMarketsMngoLogo,
-      memeMemeLogo,
-      pancakeSwap,
-      simonsCat
-    ];
+    // const images = [
+    //   bomeLogo,
+    //   bonkLogo,
+    //   brettLogo,
+    //   dogeCoinLogo,
+    //   dogsLogo,
+    //   pepeLogo,
+    //   ponkeLogo,
+    //   mangoMarketsMngoLogo,
+    //   memeMemeLogo,
+    //   pancakeSwap,
+    //   simonsCat
+    // ];
   
-    // Функция для получения случайного изображения с ограничением
-    const getRandomImage = () => {
-      const availableImages = images.filter((img) => (imageCount[img] || 0) < 1); // Учитываем ограничение
-      if (availableImages.length === 0) {
-        return null; // Если изображения исчерпаны, возвращаем null
-      }
-      const randomIndex = Math.floor(Math.random() * availableImages.length);
-      const selectedImage = availableImages[randomIndex];
-      imageCount[selectedImage] = (imageCount[selectedImage] || 0) + 1;
-      return selectedImage;
-    };
+    // // Функция для получения случайного изображения с ограничением
+    // const getRandomImage = () => {
+    //   const availableImages = images.filter((img) => (imageCount[img] || 0) < 1); // Учитываем ограничение
+    //   if (availableImages.length === 0) {
+    //     return null; // Если изображения исчерпаны, возвращаем null
+    //   }
+    //   const randomIndex = Math.floor(Math.random() * availableImages.length);
+    //   const selectedImage = availableImages[randomIndex];
+    //   imageCount[selectedImage] = (imageCount[selectedImage] || 0) + 1;
+    //   return selectedImage;
+    // };
   
     // Генерация кругов
     const circlesArray = currentStageData.coins.map((coin, index) => {
       const position = { top: coin.y, left: coin.x }; // Позиция монеты
-      const randomImage = getRandomImage(); // Генерация изображения
+      // const randomImage = getRandomImage(); // Генерация изображения
   
       return (
         <Circle
           key={`${index}-${coin.x}-${coin.y}-${coin.type}`}
           isGreen={coin.type === 'good'}
-          image={randomImage || ''} // Подставляем случайное изображение
+          image={coin.image || ''} // Подставляем случайное изображение
           onClick={
             coin.type === 'good'
               ? () => handleGreenClick(coin.x, coin.y)
@@ -297,6 +297,9 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
           <div className='game-info'>
             <div className='score'>
               <p>Score: {score}</p>
+            </div>
+            <div>
+              <img src={currentStageData.coins.find(e => e.type === 'good')?.image} alt='Level Image' />
             </div>
             <div className='lvl'>
               LVL: <span>{currentLevel.level}</span> /{' '}
