@@ -23,6 +23,10 @@ class UserTokenOut(Schema):
     token: str
 
 
+class CodeOut(Schema):
+    code: str
+
+
 class DetailOut(Schema):
     detail: str
 
@@ -99,3 +103,8 @@ class CoinIn(Schema):
 class GameIn(Schema):
     uuid: uuid.UUID
     data: list[CoinIn]
+
+
+class UserDiscordIn(Schema):
+    code: str
+    discord: int

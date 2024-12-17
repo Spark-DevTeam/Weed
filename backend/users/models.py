@@ -44,6 +44,18 @@ class TgUser(TimeBasedModel):
         verbose_name_plural = "Пользователи"
 
 
+class DiscordUser(TimeBasedModel):
+    id = models.BigIntegerField(primary_key=True, unique=True, verbose_name="DS ID")
+    user = models.OneToOneField(TgUser, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.user.name
+
+    class Meta:
+        verbose_name = "ДС Пользователь"
+        verbose_name_plural = "ДС Пользователи"
+
+
 class Referrals(TimeBasedModel):
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
     invited = models.ForeignKey(

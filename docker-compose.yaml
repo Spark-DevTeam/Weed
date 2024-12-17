@@ -44,6 +44,19 @@ services:
       - .env
     volumes:
       - ./bot/:/app
+  discord:
+    image: weed-discord:latest
+    container_name: discord
+    build:
+      context: ./discord
+      dockerfile: Dockerfile
+      target: development
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    volumes:
+      - ./discord/:/app
   frontend:
     image: weed-front:latest
     container_name: frontend

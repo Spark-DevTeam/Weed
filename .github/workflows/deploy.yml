@@ -21,6 +21,9 @@ jobs:
           echo TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} >> .env
           echo URI=${{ secrets.URI }} >> .env
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+          echo DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} >> .env
+          echo DISCORD_GUILD=${{ secrets.DISCORD_GUILD }} >> .env
+          echo DISCORD_ROLE=${{ secrets.DISCORD_ROLE }} >> .env
 
       - name: 'set env'
         run: |
@@ -57,6 +60,17 @@ jobs:
           tags: weed-bot:${{ github.sha }}
           cache-from: type=gha,scope=bot-cache
           cache-to: type=gha,scope=bot-cache,mode=max
+        
+      - name: Build and push discord
+        uses: docker/build-push-action@v5
+        with:
+          context: ./discord
+          push: false
+          load: true
+          target: prod
+          tags: weed-discord:${{ github.sha }}
+          cache-from: type=gha,scope=discord-cache
+          cache-to: type=gha,scope=discord-cache,mode=max
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5

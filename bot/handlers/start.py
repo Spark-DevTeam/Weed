@@ -31,10 +31,10 @@ async def command_start_handler(
     await state.clear()
     args = command.args
     payload = decode_payload(args)
-    await api.createUser(
+    data = await api.createUser(
         id=message.from_user.id, name=message.from_user.full_name, ref=payload
     )
-    return await message.answer(START_TEXT)
+    return await message.answer(START_TEXT.format(code=data.get("code")))
 
 
 @router.message(CommandStart())
@@ -42,5 +42,5 @@ async def command_ref_start_handler(
     message: Message, api: APIWorker, state: FSMContext, command: CommandObject = None
 ):
     await state.clear()
-    await api.createUser(id=message.from_user.id, name=message.from_user.full_name)
-    return await message.answer(START_TEXT)
+    data = await api.createUser(id=message.from_user.id, name=message.from_user.full_name)
+    return await message.answer(START_TEXT.format(code=data.get("code")))

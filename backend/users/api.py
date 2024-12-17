@@ -1,7 +1,7 @@
 from ninja import Router
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.handlers.asgi import ASGIRequest
-from .models import TgUser, Referrals, UserDailyReward, DailyReward, Game, Coin
+from .models import TgUser, Referrals, UserDailyReward, DailyReward, Game, Coin, DiscordUser
 from .schemas import (
     UserInitSchema,
     UserOut,
@@ -14,6 +14,8 @@ from .schemas import (
     ScreenIn,
     GameOut,
     GameIn,
+    CodeOut,
+    UserDiscordIn
 )
 import jwt
 from django.conf import settings
@@ -33,6 +35,7 @@ from economic import (
 )
 import random
 import math
+import requests
 
 router = Router()
 
@@ -43,6 +46,24 @@ def is_far_enough(new_x, new_y, existing_coordinates, min_distance):
         if distance < min_distance:
             return False
     return True
+
+
+def check_role(id: int):
+    headers = {
+        "Authorization": "Bot " + os.getenv("DISCORD_TOKEN")
+    }
+
+    resp = requests.get(url=f"{settings.DISCORD_URI}/{id}", headers=headers)
+
+    data = resp.json()
+
+    if data.get("code"):
+        return False
+    
+    if settings.DISCORD_ROLE in data.get("roles", []):
+        return True
+
+    return all(el in data.get("roles") for el in settings.DISCORD_ROLE)
 
 
 async def validate(hash_str, init_data, token, c_str="WebAppData"):
@@ -114,7 +135,13 @@ async def retrieve_jwt_token(
         pass  # Debug only
         # return 400, {"detail": "Invalid hash"}
 
-    instance, created = await TgUser.objects.aget_or_create(id=payload.user.get("id"))
+    instance, created = await TgUser.objects.select_related("discorduser").aget_or_create(id=payload.user.get("id"))
+
+    if not instance.discorduser:
+        return 400, {"detail": "Doesn't have a role"}
+    
+    if not check_role(id=instance.discorduser.id):
+        return 400, {"detail": "Doesn't have a role"}
 
     name = payload.user.get("first_name") + (
         " " + payload.user.get("last_name") if payload.user.get("last_name") else ""
@@ -144,20 +171,38 @@ async def retrieve_jwt_token(
     return {"token": _token}
 
 
-@router.post("/", response={200: UserOut})
+@router.post("/", response={200: CodeOut})
 async def create_user(request: WSGIRequest | ASGIRequest, payload: UserInitSchema):
     instance, created = await TgUser.objects.aget_or_create(id=payload.id)
 
     instance.name = payload.name
 
     if payload.ref and created:
+
         ref = await TgUser.objects.filter(id=payload.ref).afirst()
         if ref:
             await Referrals.objects.acreate(invited=instance, inviter=ref)
 
     await instance.asave()
 
-    return {**instance.__dict__, "created": created}
+    return {"code": instance.code}
+
+
+@router.put("/", response={200: DetailOut, 400: DetailOut})
+async def create_dsuser(request: WSGIRequest | ASGIRequest, payload: UserDiscordIn):
+    print(payload.dict())
+    try:
+        id = base64.decodebytes(payload.code.encode()).decode()
+    except Exception as e:
+        print(e)
+        return 400, {"detail": "Bad code"}
+
+    if not await TgUser.objects.filter(id=id).aexists():
+        return 400, {"detail": "User not found"}
+    
+    await DiscordUser.objects.acreate(id=payload.discord, user_id=id)
+
+    return 200, {"detail": "Good"}
 
 
 @router.get("/daily/", auth=authenticate, response={200: DailyOut, 400: DailyOut})
@@ -278,16 +323,13 @@ async def claim(request: WSGIRequest | ASGIRequest):
     return 200, instance
 
 
-@router.post("/game/", auth=authenticate, response={200: GameOut, 400: DetailOut})
+@router.post("/game/", auth=authenticate, response={200: GameOut})
 async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     resp = []
     coins = []
 
     async for i in Coin.objects.all():
         coins.append(i)
-
-    if len(coins) < TOTAL_STAGES + BASE_BAD:
-        return 400, {"detail": "No coins"}
 
     for i in range(TOTAL_LEVELS):
         _pre_resp = []
@@ -313,7 +355,7 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
                                 "type": "bad",
                                 "x": _x,
                                 "y": _y,
-                                "image": (coins_duplicate.pop(random.randint(0, len(coins_duplicate) - 1))).image.url,
+                                "image": coins.pop(random.randint(0, len(coins) - 1)),
                             }
                         )
                         break

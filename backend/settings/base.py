@@ -10,6 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 TELEGRAM_ENDPOINT = f"""https://api.telegram.org/bot{os.getenv("TELEGRAM_TOKEN")}"""
 
+DISCORD_GUILD = os.getenv("DISCORD_GUILD")
+DISCORD_ROLE = os.getenv("DISCORD_ROLE").split(",")
+DISCORD_URI = f"https://discord.com/api/v10/guilds/{DISCORD_GUILD}/members"
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -17,7 +17,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: prod
     depends_on:
       - db
     env_file:
@@ -38,7 +37,19 @@ services:
     build:
       context: ./bot
       dockerfile: Dockerfile
-      target: prod
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  discord:
+    image: weed-discord:${GIT_SHA}
+    build:
+      context: ./discord
+      dockerfile: Dockerfile
     depends_on:
       - backend
     env_file:
