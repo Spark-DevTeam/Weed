@@ -63,7 +63,7 @@ def check_role(id: int):
     if settings.DISCORD_ROLE in data.get("roles", []):
         return True
 
-    return all(el in data.get("roles") for el in settings.DISCORD_ROLE)
+    return any(el in data.get("roles") for el in settings.DISCORD_ROLE)
 
 
 async def validate(hash_str, init_data, token, c_str="WebAppData"):
