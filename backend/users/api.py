@@ -137,9 +137,9 @@ async def retrieve_jwt_token(
 
     instance, created = await TgUser.objects.select_related("discorduser").aget_or_create(id=payload.user.get("id"))
 
-    if not instance.discorduser:
+    if not DiscordUser.objects.filter(user=instance).aexists():
         return 400, {"detail": "Doesn't have a role"}
-    
+
     if not check_role(id=instance.discorduser.id):
         return 400, {"detail": "Doesn't have a role"}
 
@@ -323,13 +323,16 @@ async def claim(request: WSGIRequest | ASGIRequest):
     return 200, instance
 
 
-@router.post("/game/", auth=authenticate, response={200: GameOut})
+@router.post("/game/", auth=authenticate, response={200: GameOut, 400: DetailOut})
 async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     resp = []
     coins = []
 
     async for i in Coin.objects.all():
         coins.append(i)
+
+    if len(coins) < 10:
+        return 400, {"detail": "Not enough coins"}
 
     for i in range(TOTAL_LEVELS):
         _pre_resp = []
