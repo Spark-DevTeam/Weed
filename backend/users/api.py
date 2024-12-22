@@ -137,7 +137,7 @@ async def retrieve_jwt_token(
 
     instance, created = await TgUser.objects.select_related("discorduser").aget_or_create(id=payload.user.get("id"))
 
-    if not DiscordUser.objects.filter(user=instance).aexists():
+    if not await DiscordUser.objects.filter(user=instance).aexists():
         return 400, {"detail": "Doesn't have a role"}
 
     if not check_role(id=instance.discorduser.id):
@@ -358,7 +358,7 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
                                 "type": "bad",
                                 "x": _x,
                                 "y": _y,
-                                "image": coins.pop(random.randint(0, len(coins) - 1)),
+                                "image": coins_duplicate.pop(random.randint(0, len(coins_duplicate) - 1)),
                             }
                         )
                         break
