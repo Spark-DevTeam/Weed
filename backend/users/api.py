@@ -331,8 +331,8 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     async for i in Coin.objects.all():
         coins.append(i)
 
-    if len(coins) < 10:
-        return 400, {"detail": "Not enough coins"}
+    if len(coins) < TOTAL_STAGES + BASE_BAD:
+        return 400, {"detail": "No coins"}
 
     for i in range(TOTAL_LEVELS):
         _pre_resp = []
@@ -358,7 +358,7 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
                                 "type": "bad",
                                 "x": _x,
                                 "y": _y,
-                                "image": coins_duplicate.pop(random.randint(0, len(coins_duplicate) - 1)),
+                                "image": (coins_duplicate.pop(random.randint(0, len(coins_duplicate) - 1))).image.url,
                             }
                         )
                         break
@@ -372,7 +372,6 @@ async def gen_game(request: WSGIRequest | ASGIRequest, payload: ScreenIn):
     instance = await Game.objects.acreate(data={"gen": resp}, user_id=request.auth)
 
     return 200, {"uuid": instance.uuid, "generated": resp}
-
 
 @router.put("/game/", auth=authenticate, response={200: UserOut, 400: DetailOut})
 async def finish_game(request: WSGIRequest | ASGIRequest, payload: GameIn):
