@@ -67,7 +67,8 @@ interface ClickData {
   coinY: number; // Координата Y нажатой монеты
 }
 
-export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
+export const Game: React.FC<{ game: IGame, getGame: () => void }> = ({ game, getGame }) => {
+  const [gameData, setGameData] = useState(game);
   const [levelIndex, setLevelIndex] = useState(0); // Текущий уровень
   const [stageIndex, setStageIndex] = useState(0); // Текущая стадия
   const [timeLeft, setTimeLeft] = useState(gameData.generated[0].time); // Таймер для уровня
@@ -257,13 +258,16 @@ export const Game: React.FC<{ gameData: IGame }> = ({ gameData }) => {
   };
 
   // Функция для повторной попытки после завершения игры
-  const handleTryAgain = () => {
+  const handleTryAgain = async () => {
+    console.log('hui')
     setLevelIndex(0); // Сбрасываем до первого уровня
     setStageIndex(0); // Сбрасываем до первой стадии
     setTimeLeft(gameData.generated[0].time); // Таймер для первого уровня
     setGameOver(false); // Сбрасываем флаг завершения игры
     setClickData([]); // Сбрасываем данные кликов
     startCountdown(); // Запуск обратного отсчета
+    const res: any = await getGame();
+    setGameData(res);
   };
 
   // Классы для контейнера игры

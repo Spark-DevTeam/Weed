@@ -30,6 +30,7 @@ export function GamePage() {
 
       console.log('@Game', response.data);
       setGameData(response.data);
+      return response.data;
     } catch (e) {
       console.error(e);
     } finally {
@@ -51,7 +52,7 @@ export function GamePage() {
 
   return (
     <div>
-      <Game gameData={gameData} />
+      <Game game={gameData} getGame={getGame}/>
     </div>
   );
 }
